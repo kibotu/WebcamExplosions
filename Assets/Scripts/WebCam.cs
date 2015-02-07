@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 namespace WebcamExplosions
 {
-	public class WebCam : MonoBehaviour {
+	public class WebCam : MonoBehaviour
+	{
+	    public GridLayoutGroup Grid;
 
 		void Start () {
 			StartCoroutine(RequestAuthorization());
@@ -12,17 +15,46 @@ namespace WebcamExplosions
 		IEnumerator RequestAuthorization() {
 			yield return Application.RequestUserAuthorization(UserAuthorization.WebCam );
 			if (Application.HasUserAuthorization(UserAuthorization.WebCam)) {
-				WebCamTexture webcamTexture = new WebCamTexture();
-				GetComponent<MeshRenderer>().material.mainTexture = webcamTexture;
-				webcamTexture.Play();
+
+                var devices = WebCamTexture.devices;
+			    foreach (var webCamDevice in devices)
+			    {
+			        var button = Prefabs.Shared.Button.Instantiate().GetComponent<Button>();
+			        button.transform.SetParent(Grid.gameObject.transform);
+			        button.GetComponentInChildren<Text>().text = webCamDevice.name;
+			        var device = webCamDevice;
+			        button.onClick.AddListener(() =>
+			        {
+			            StartWebcamStream(device.name);
+			            StartAudioStream();
+			            Grid.gameObject.SetActive(false);
+			        });
+			    }
+
 			} else {
 				Debug.Log ("meh~");
 			}
 		}
 
-		public void OnMouseDown() 
+	    private void StartAudioStream()
+	    {
+	        var aud = gameObject.AddComponent<AudioSource>();
+            aud.clip = Microphone.Start("Built-in Microphone", true, 10, 44100);
+            aud.Play();
+	    }
+
+	    private void StartWebcamStream(string name)
+	    {
+	        var webcamTexture = new WebCamTexture {deviceName = name};
+	        GetComponent<MeshRenderer>().material.mainTexture = webcamTexture;
+	        webcamTexture.Play();
+	    }
+
+	    public void OnMouseDown() 
 		{
-			Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
+            if(Grid.gameObject.activeSelf) 
+                return;
+			var pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
 			Prefabs.Shared.Explosion.Instantiate().transform.position = pos;
 		}
 	}

@@ -26,13 +26,14 @@ namespace WebcamExplosions
 		#endregion
 
 		public GameObject Explosion;
+	    public GameObject Button;
 	}
 
 	public static class GameObjectExtensions
 	{
 		public static GameObject Instantiate (this GameObject prefab)
 		{
-			return GameObject.Instantiate (prefab) as GameObject;
+			return Object.Instantiate (prefab) as GameObject;
 		}
 	}
 }

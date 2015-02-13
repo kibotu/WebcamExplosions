@@ -36,7 +36,9 @@ half4 frag( v2f i ) : COLOR
 	float2 offset = bump * _BumpAmt * _GrabTexture_TexelSize.xy;
 	i.uvgrab.xy = offset * i.uvgrab.z + i.uvgrab.xy;
 	
-	half4 col = tex2Dproj( _GrabTexture, i.uvgrab.xyw );
+	//half4 col = tex2Dproj( _GrabTexture, i.uvgrab.xyw );
+	float2 uv = i.uvgrab.xy / i.uvgrab.w;
+	half4 col = tex2D( _GrabTexture, uv );
 	half4 tint = tex2D( _MainTex, i.uvmain );
 	return col * tint;
 }

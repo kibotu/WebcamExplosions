@@ -19,6 +19,7 @@ namespace WebcamExplosions
                 var devices = WebCamTexture.devices;
 			    foreach (var webCamDevice in devices)
 			    {
+					Debug.Log ("webCamDevice " + webCamDevice.name);
 			        var button = Prefabs.Shared.Button.Instantiate().GetComponent<Button>();
 			        button.transform.SetParent(Grid.gameObject.transform);
 			        button.GetComponentInChildren<Text>().text = webCamDevice.name;
@@ -29,6 +30,7 @@ namespace WebcamExplosions
 			            StartAudioStream();
 			            Grid.gameObject.SetActive(false);
 			        });
+			      break;
 			    }
 
 			} else {
@@ -38,9 +40,9 @@ namespace WebcamExplosions
 
 	    private void StartAudioStream()
 	    {
-	        var aud = gameObject.AddComponent<AudioSource>();
-            aud.clip = Microphone.Start("Built-in Microphone", true, 10, 44100);
-            aud.Play();
+	        //var aud = gameObject.AddComponent<AudioSource>();
+            //aud.clip = Microphone.Start(null, false, 10, 44100);
+            //aud.Play();
 	    }
 
 	    private void StartWebcamStream(string name)
@@ -50,9 +52,9 @@ namespace WebcamExplosions
 	        webcamTexture.Play();
 	    }
 
-	    public void OnMouseDown() 
+	    public void OnMouseDown()
 		{
-            if(Grid.gameObject.activeSelf) 
+            if(Grid.gameObject.activeSelf)
                 return;
 			var pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
 			Prefabs.Shared.Explosion.Instantiate().transform.position = pos;

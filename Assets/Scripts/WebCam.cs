@@ -47,7 +47,7 @@ namespace WebcamExplosions
 
 	    private void StartWebcamStream(string name)
 	    {
-	        var webcamTexture = new WebCamTexture {deviceName = name};
+	        var webcamTexture = new WebCamTexture {deviceName = name, requestedWidth = Screen.width, requestedHeight = Screen.height, requestedFPS = 60};
 	        GetComponent<MeshRenderer>().material.mainTexture = webcamTexture;
 	        webcamTexture.Play();
 	    }

@@ -7,6 +7,10 @@
 # Icon must end with two \r
 Icon
 
+.consulo/
+.idea/
+Deployment/
+webgl/
 
 # Thumbnails
 ._*
